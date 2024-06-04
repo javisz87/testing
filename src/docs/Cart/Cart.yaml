@@ -1,0 +1,164 @@
+paths:
+  /api/cart:
+    post:
+      summary: Crear carrito
+      tags:
+        - Cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createCart'
+      responses:
+        "200":
+          description: Cart creado correctamente
+        "500":
+          description: Error interno del servidor al crear carrito
+    get:
+      summary: Obtener carritos
+      tags:
+        - Cart
+      responses:
+        "200":
+          description: Los carritos fueron obtenidos satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+  /api/cart/{cid}/{pid}:
+    post:
+      summary: Agregar productos al carrito, solo lo pueden hacer los usuarios de role "user"
+      tags:
+        - Cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/addProduct'
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del cart que se desea agregar productos
+        schema:
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se desea agregar al cart
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto agregado al carrito satisfactoriamente
+        "500":
+          description: Error del servidor al agregar producto al cart
+    delete:
+      summary: Eliminar un producto del carrito, solo lo pueden hacer los usuarios con role "user"
+      tags:
+        - Cart
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del cart que se desea agregar productos
+        schema:
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se desea agregar al cart
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto eliminado del carrito satisfactoriamente
+        "500":
+          description: Error del servidor al eliminar producto del cart
+  /api/cart/{cid}:
+    delete:
+      summary: Vaciar carrito
+      tags:
+        - Cart
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del cart que se desea agregar productos
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Cart vaciado correctamente
+        "500":
+          description: Error del servidor al vaciar cart
+  /api/cart/{cid}/purchase:
+    put:
+      summary: Crear ticket y finalizar compra
+      tags:
+        - Cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/finalizePurchase'
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del cart que se desea agregar productos
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Ticket generado correctamente
+        "500":
+          description: Error del servidor al finalizar compra
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id: 
+          type: ObjectId
+          description: Id autogenerado por Mongo
+        title:
+          type: String
+          description: Título del cart
+        products_list:
+          type: Array
+          description: Lista de productos que se agregaron al cart
+      example:
+        _id: ObjectId("65673869eb135d755de3e96d")
+        title: Cart de prueba
+        products_list: []
+  requestBodies:
+    createCart:
+      type: object
+      properties:
+        name:
+          type: String
+          description: Título del cart
+      example:
+        name: Cart de prueba
+    addProduct:
+      type: object
+      properties:
+        quantity:
+          type: Number
+          description: Cantidad del producto que se desea agregar al cart
+      example:
+        quantity: 2
+    finalizePurchase:
+      type: object
+      properties:
+        user:
+          type: String
+          description: Id del usuario que está realizando la compra
+      example:
+        user: "656fa88ca184c992adb1235e"

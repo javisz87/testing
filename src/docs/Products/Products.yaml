@@ -1,0 +1,154 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'
+        "500":
+          description: Error interno del servidor
+    post:
+      summary: Crear un producto, solo lo pueden hacer los usuarios admin o premium.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createProduct'
+      responses:
+        "200":
+          description: El producto ha sido creado satisfactoriamente
+        "500":
+          description: Error interno del servidor al crear un producto
+  /api/products/{pid}:
+    get:
+      summary: Obtiene solo un producto mediante su Id
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se desea solicitar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Product'
+        "500":
+          description: Error interno del servidor al obtener producto.
+    put:
+      summary: Actualiza los campos de un producto, solo lo pueden hacer los usuarios admin o premium
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se desea actualizar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto actualizado
+        "500":
+          description: Error interno del servidor al actualizar producto.
+    delete:
+      summary: Eliminar un producto, solo lo pueden hacer los usuarios admin o premium.
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se desea eliminar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto eliminado
+        "500":
+          description: Error interno del servidor al eliminar producto.
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id generado de Mongo
+        nombre:
+          type: String
+          description: Nombre del producto
+        categoria:
+          type: String
+          description: Categoría del producto
+        precio:
+          type: Number
+          description: Precio del producto
+        stock:
+          type: Number
+          description: Stock del producto
+        imagen:
+          type: String
+          description: Url de la imagen del producto
+        owner:
+          type: String
+          description: Email del Propietario o dueño del producto (Por defecto admin)
+      example:
+        _id: ObjectId("657b060f376e255b57663ddd")
+        nombre: ProductoA
+        categoria: CategoriaA
+        precio: 1000
+        stock: 50
+        imagen: urlImagenProductoA
+        owner: owner@mail.com || admin
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id generado de Mongo
+        title:
+          type: String
+          description: Nombre del producto
+        categoria:
+          type: String
+          description: Categoría del producto
+        precio:
+          type: Number
+          description: Precio del producto
+        stock:
+          type: Number
+          description: Stock del producto
+        imagen:
+          type: String
+          description: Url de la imagen del producto
+        owner:
+          type: String
+          description: Email del Propietario o dueño del producto (Por defecto admin)
+      example:
+        title: ProductoA
+        categoria: CategoriaA
+        precio: 1000
+        stock: 50
+        imagen: urlImagenProductoA
+        owner: owner@mail.com || undefined
+      

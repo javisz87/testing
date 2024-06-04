@@ -1,0 +1,109 @@
+paths:
+  /api/sessions/register:
+    post:
+      summary: Registrar usuario
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createUser'
+      responses:
+        "200":
+          description: Usuario registrado
+        "500":
+          description: Error del servidor al registrar usuario
+  /api/sessions/:
+    post:
+      summary: Login
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/loginUser'
+      responses:
+        "200":
+          description: Ingreso correcto
+        "500":
+          description: Error del servidor al logearse
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por Mongo
+        first_name: 
+          type: String
+          description: Nombre del usuario
+        last_name:
+          type: String
+          description: Apellido del usuario
+        email:
+          type: String
+          description: Email del usuario
+        age: 
+          type: Number
+          description: Edad del usuario
+        password:
+          type: String
+          description: Contraseña del usuario, será hasheada
+        role:
+          type: String
+          description: Role del usuario (Por defecto "user")
+      example:
+        _id: ObjectId("657c414f74a1383be0953085")
+        first_name: Optimus
+        last_name: Prime
+        email: optimus@mail.com
+        age: 27
+        password: "$2b$10$aRSM.UKzFeRftxv9ZlMHjuxWzv7cBfR.Hh8ZNiyB.5dZse7sVDbAa"
+        role: admin || premium || undefined
+  requestBodies:
+    createUser:
+      type: object
+      properties:
+        first_name:
+          type: String
+          description: Nombre del usuario
+        last_name:
+          type: String
+          description: Apellido del usuario
+        email:
+          type: String
+          description: Email del usuario
+        age:
+          type: Number
+          description: Edad del usuario
+        password:
+          type: String
+          description: Contraseña del usuario, será hasheada.
+        role: 
+          type: String
+          description: Role del usuario (Por defecto "user")
+      example:
+        first_name: Optimus
+        last_name: Prime
+        email: optimus@mail.com
+        age: 27
+        password: "123"
+        role: admin || premium || undefined
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: String
+          description: Email del usuario registrado
+        password:
+          type: String
+          description: Constraseña del usuario
+      example:
+        email: optimus@mail.com
+        password: "123"
