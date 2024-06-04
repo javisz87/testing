@@ -7,7 +7,7 @@
     "start": "nodemon src/app.js",
     "test": "mocha --timeout 10000 test/supertest.test.js"
   },
-  "author": "Franco Garay Benitez",
+  "author": "Javier Szumilo",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
